@@ -1,0 +1,106 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+<div class="container-fluid mt-4">
+    {% include '_messages.html' %}
+    <div class="row">
+        <div class="col-sm-12 col-md-10">
+            <h3 class="text-left">KIỂM TRA THÔNG TIN CỦA BẠN</h3>
+            <table class="table table-sm">
+                <thead>
+                    <th>Mã Hóa Đơn</th>
+                    <th>Trạng Thái</th>
+                    <th>Tên Khách Hàng</th>
+                    <th>Email</th>
+                    <th>SĐT</th>     
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>{{orders.invoice}}</td>
+                        <td>{{orders.status}}</td>
+                        <td>{{customer.name}}</td>
+                        <td>{{customer.email}}</td>                       
+                        <td>{{customer.contact}}</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            <h3 class="text-left">ĐƠN HÀNG CỦA BẠN</h3>
+            <table class="table table-sm">
+                <thead>
+                    <th>STT</th>
+                    <th>Tên SP</th>
+                    <th>Màu Sắc</th>
+                    <th>Giá (USD)</th>
+                    <th>Số Lượng</th>
+                    <th>Giảm Giá</th>
+                    <th>Thành Tiền (USD)</th>             
+                </thead>
+                <tbody>
+                    {% for key, product in orders.orders.items() %}
+                    {% set discount =(product.discount/100) * product.price|float %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td>{{product.name}}</td>
+                        <form action="{{url_for('updatecart', code=key)}}" method="post">
+                        <td> 
+                            {{product.color|capitalize}}
+                        </td>
+                        <td>{{"%.0f"|format(product.price)}}</td>
+                        <td> {{product.quantity}} </td>
+                        {% if product.discount  %}
+                        <td>{{"%.0f"|format(discount)}} &nbsp; &nbsp; ({{product.discount}} %) </td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                        {% set subtotal = product.quantity|int * product.price|float  %}
+                        <td>{{"%.0f"|format(subtotal - discount|round(1,'floor')) }}</td>
+                    </form>        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
+        
+        <div class="col-sm-12 col-md-2">
+            <!-- <table class="table table-sm">
+                <tr> 
+    
+                    <td>   
+                        
+                    </td>
+                    <td width="35%"></td>
+                    <td> <h4>Thuế: {{tax}} USD</h4></td>
+                    <td> <h4>Tổng Tiền: {{grandTotal}} USD</h4> </td>
+                    
+                       
+                </tr>
+                </table> -->
+                <div class="border border-secondary p-2" style="border-radius: 10px!important; display: flex; flex-direction: column;">         
+                    <h4 class="p-2">Thuế: {{tax}} USD</h4>                       
+                    <h4 class="p-2" style="font-weight: bold;">Tồng Tiền: {{grandTotal}} USD</h4>       
+                    {% if orders.status =='Đã Thanh Toán' %}
+                    <p class="label label-success"><i class="fas fa-check"></i> Đã Thanh Toán</p>
+                    {% else %}
+                    <form action="{{url_for('payment')}}" method="POST" class="text-center">
+                        {% set amount =  grandTotal.replace('.','') %}
+                        <input type="hidden" name="amount" value="{{amount}}">
+                        <input type="hidden" name="invoice" value="{{orders.invoice}}">
+                        <script src="https://checkout.stripe.com/checkout.js"
+                        class="stripe-button"
+                        data-key="pk_test_51ITokaB2sW6f5ETwftSKUDbFnoo2XyQhWmPxFWianevkNu2APWoGdW1DABa2cs8OzmKH3FSYyhxdmXSeqttj5gsE00zY2cxjtd"
+                        data-name="{{customer.name}}"
+                        data-description="ShikoTechShop purchase"
+                        data-amount="{{amount}}"
+                        data-currency="USD">
+                        </script>
+                    </form> 
+                    {% endif %}  
+                </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock content %}

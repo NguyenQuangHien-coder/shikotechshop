@@ -1,0 +1,99 @@
+{% extends 'admin_layout.html' %}
+{% block content %}
+
+<div class="tables">
+  {% if brands %}
+  <h2 class="title1">Thương Hiệu</h2>			
+  {% else %}
+  <h2 class="title1">Danh Mục</h2>			
+  {% endif %}			
+  <div class="bs-example widget-shadow" data-example-id="hoverable-table"> 
+    {% include '_messages.html' %}
+    <table class="table table-hover"> 
+      <thead> 
+        <tr> 
+          <th>#</th>
+          {% if brands %}
+          <th>Tên Thương Hiệu</th>
+          {% else %}
+          <th>Tên Danh Mục</th>
+          {% endif %}			
+          <th></th>
+          <th></th>
+        </tr> 
+      </thead> 
+      <tbody> 
+        {% if brands %}
+          {% for brand in brands %}
+          <tr>
+            <td>{{loop.index}}</td>
+            <td>{{ brand.name }}</td>          
+            <td> <a href="{{url_for('updatebrand', id=brand.id)}}" class="btn btn-sm btn-info">Sửa </a> </td>
+            <td><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal-{{brand.id}}">
+              Xóa
+            </button></td>
+          </tr>
+
+          <!-- DELETE MODAL  -->
+          <div class="modal fade" id="exampleModal-{{brand.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{brand.name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc muốn xóa Thương Hiệu {{brand.name}} ?
+                </div>
+                <div class="modal-footer" style="display: flex; flex-direction: inherit;">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay Lại</button>
+                    <form action="{{ url_for('deletebrand', id=brand.id) }}" method="POST">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          {% for category in categories %}
+          <tr>
+            <td>{{loop.index}}</td>
+            <td>{{ category.name }}</td>
+            <td> <a href="{{url_for('updatecat', id=category.id)}}" class="btn btn-sm btn-info">Sửa </a> </td>
+            <td><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal-{{category.id}}">
+              Xóa
+            </button></td>
+          </tr>
+
+          <!-- DELETE MODAL  -->
+          <div class="modal fade" id="exampleModal-{{category.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{category.name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc muốn xóa Danh Mục {{category.name}} ?
+                </div>
+                <div class="modal-footer" style="display: flex; flex-direction: inherit;">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay Lại</button>
+                    <form action="{{ url_for('deletecat', id=category.id) }}" method="POST">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+          </div>
+          {% endfor %}
+          {% endif %}
+      </tbody> 
+    </table>
+  </div>					
+</div>
+{% endblock content %}

@@ -1,0 +1,64 @@
+{% extends 'admin_layout.html' %}
+{% block content %}
+
+<div class="tables">
+  
+  <h2 class="title1">Đơn Hàng</h2>			
+ 
+  <div class="bs-example widget-shadow" data-example-id="hoverable-table"> 
+    {% include '_messages.html' %}
+    <table class="table table-hover"> 
+      <thead> 
+        <tr> 
+          <th>#</th>
+          <th>Mã đơn</th>
+          <th>ID Khách Hàng</th>
+          <th>Trạng Thái</th>
+          <th>Ngày Tạo</th>
+          <th></th>
+          <th></th>
+        </tr> 
+      </thead> 
+      <tbody> 
+        
+          {% for order in orders %}
+          <tr>
+            <td>{{loop.index}}</td>
+            <td>{{ order.invoice }}</td>     
+            <td>{{ order.customer_id }}</td>       
+            <td>{{ order.status }}</td>                                     
+            <td>{{ order.date_created }}</td>     
+            <td><a href="{{url_for('orderdetail', invoice = order.invoice)}}" class="float-left btn btn-sm btn-secondary">Chi Tiết</a></td>    
+            <td><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal-{{order.id}}">
+              Xóa
+            </button></td>
+          </tr>
+          <!-- DELETE MODAL  -->
+        <div class="modal fade" id="exampleModal-{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">{{order.invoice}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                  Bạn có chắc muốn xóa đơn hàng {{order.invoice}} ?
+              </div>
+              <div class="modal-footer" style="display: flex; flex-direction: inherit;">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay Lại</button>
+                  <form action="{{ url_for('deleteorder', id=order.id) }}" method="POST">
+                      <button type="submit" class="btn btn-danger">Xóa</button>
+                  </form>
+              </div>
+          </div>
+          </div>
+        </div>
+          {% endfor %}
+      </tbody> 
+    </table>
+
+  </div>					
+</div>
+{% endblock content %}

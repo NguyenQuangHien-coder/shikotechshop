@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+<div class="container-fluid mt-4">
+    {% include '_messages.html' %}
+    <div class="row">
+        <div class="col-sm-12 col-md-10">
+            <h2 class="text-center">GIỎ HÀNG CỦA BẠN</h2>
+            <table class="table table-sm">
+                <thead>
+                    <th>STT</th>
+                    <th>Hình Ảnh</th>
+                    <th>Tên SP</th>
+                    <th>Màu Sắc</th>
+                    <th>Giá (USD)</th>
+                    <th>Số Lượng</th>
+                    <th>Giảm Giá</th>
+                    <th>Thành Tiền (USD)</th>
+                    <th></th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    {% for key, product in session['Shoppingcart'].items() %}
+                    {% set discount =(product.discount/100) * product.price|float %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td><img src="{{url_for('static',filename='images/'+ product.image)}}" alt="{{product.name}}" width="50" height="45"></td>
+                        <td>{{product.name}}</td>
+                        <form action="{{url_for('updatecart', code=key)}}" method="post">
+                        <td>
+                            {% set colors = product.colors.split(',') %}
+                            <label for="colors">Màu: </label>
+                            <select name="color" id="color">
+                                <option value="{{product.color}}" style="display: none;">{{product.color|capitalize}}</option>
+                                {% for color in colors %}
+                                {% set col = color.split(':') %}
+                                <option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+                                {% endfor %}
+                            </select>
+                        
+                        </td>
+                        <td>{{"%.0f"|format(product.price)}}</td>
+                        <td> <input type="number" name="quantity" min="1" max="10" value="{{product.quantity}}"> </td>
+                        {% if product.discount  %}
+                        <td>{{"%.0f"|format(discount)}} &nbsp; &nbsp; ({{product.discount}} %) </td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                        {% set subtotal = product.quantity|int * product.price|float  %}
+                        <td>{{"%.0f"|format(subtotal - discount|round(1,'floor')) }}</td>
+                        <td><button type="submit" class="btn btn-sm btn-info"><i class="fas fa-edit"></i> Cập nhật</button> </td>
+                    </form>
+                        <td> <a href="{{url_for('deleteitem', id=key)}}" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> Xóa</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{url_for('clearcart')}}" class="btn btn-success btn-sm float-right mr-4 p-2 m-2" style="max-width: 200px; font-size: 20px;"><i class="fab fa-rev"></i> Làm mới giỏ hàng</a> 
+    </div>
+    <div class="col-sm-12 col-md-2">
+        <div class="border border-secondary p-2" style="border-radius: 10px!important; display: flex; flex-direction: column;">         
+            <h2 class="text-center">HÓA ĐƠN</h2>                               
+            <!-- <td width="35%"></td> -->
+            <h4 class="p-2">Thuế: {{tax}} USD</h4>                       
+            <h4 class="p-2" style="font-weight: bold;">Tồng Tiền: {{grandtotal}} USD</h4>                                                  
+            <a href="{{url_for('get_order')}}" class="text-center btn btn-danger py-3 px-5 mx-auto mt-2" style="display: block; max-width: 200px; font-size: 20px;"><i class="fab fa-opencart"></i> Mua Ngay </a>             
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

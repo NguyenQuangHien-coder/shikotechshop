@@ -1,0 +1,73 @@
+{% extends 'admin_layout.html' %}
+{% block content %}
+
+<div class="tables">
+  <h2 class="title1">Thông Tin Khách Hàng</h2>			
+  <div class="bs-example widget-shadow" data-example-id="hoverable-table"> 
+    {% include '_messages.html' %}
+    <table class="table table-hover"> 
+      <thead> 
+        <tr> 
+          <th>Mã Hóa Đơn</th>      
+          <th>Tên KH</th>
+          <th>Email</th>
+          <th>Điện Thoại</th>
+        </tr> 
+      </thead> 
+      <tbody>           
+        <tr>
+            <td>{{ orders.invoice }}</td>
+            <td>{{customer.name}}</td>
+            <td>{{customer.email}}</td>                       
+            <td>{{customer.contact}}</td>
+        </tr>
+    
+      </tbody> 
+    </table>
+  </div>
+</div>	
+
+<div class="tables">
+           
+  <h2 class="title1" style="margin-top: 20px;">Chi Tiết Đơn Hàng</h2>			
+  <div class="bs-example widget-shadow" data-example-id="hoverable-table"> 
+    {% include '_messages.html' %}
+    <table class="table table-hover"> 
+      <thead> 
+        <tr> 
+          <th>#</th>
+          <th>Tên SP</th>
+          <th>Màu Sắc</th>
+          <th>Giá (USD)</th>
+          <th>Số Lượng</th>
+          <th>Giảm Giá</th>
+          <th>Thành Tiền (USD)</th>   
+        </tr> 
+      </thead> 
+      <tbody>           
+        {% for key, product in orders.orders.items() %}
+        {% set discount =(product.discount/100) * product.price|float %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{product.name}}</td>
+            <form action="{{url_for('updatecart', code=key)}}" method="post">
+            <td> 
+                {{product.color|capitalize}}
+            </td>
+            <td>{{"%.0f"|format(product.price)}}</td>
+            <td> {{product.quantity}} </td>
+            {% if product.discount  %}
+            <td>{{"%.0f"|format(discount)}} &nbsp; &nbsp; ({{product.discount}} %) </td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            {% set subtotal = product.quantity|int * product.price|float  %}
+            <td>{{"%.0f"|format(subtotal - discount|round(1,'floor')) }}</td>
+        </form>        
+        </tr>
+        {% endfor %}    
+      </tbody> 
+    </table>
+  </div>					
+</div>
+{% endblock content %}

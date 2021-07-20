@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<div class="container">
+    <!-- Đăng nhập -->
+		<div class="w3_login">
+			<h3>Đăng Nhập</h3>
+			<div class="w3_login_module">
+				<div class="module form-module">
+				  <div class="toggle"><i class="fa fa-times fa-pencil"></i>
+					<!-- <div class="tooltip">Click Me</div> -->
+				  </div>
+				  <div class="form">
+					<h2>Đăng nhập bằng tài khoản của bạn</h2>
+					<form method="post">
+                        {{form.csrf_token}}
+                        <div>
+                            {{ render_field(form.email, class="form-control") }}
+                            {{ render_field(form.password, class="form-control") }}
+                        </div>
+                        <input type="submit" value="Đăng Nhập" class="btn-info">
+					</form>
+				  </div>
+				  
+				  <div class="cta"><a href="/">Quay Lại</a></div>
+				</div>
+			</div>
+			
+		</div>
+<!-- //Đăng nhập -->
+</div>
+{% endblock content %}

@@ -1,0 +1,79 @@
+ 
+<div class="agileits_header">
+  <div class="w3l_offers">
+    <a href="/">SHIKO</a>
+  </div>
+  <div class="w3l_search mt-1">
+    <!-- <form action="#" method="post">
+      <input type="text" name="Product" value="Search a product..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search a product...';}" required="">
+      <input type="submit" value=" ">
+    </form> -->
+    <form class="form-inline my-2 my-lg-0" action="{{url_for('result')}}">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+      <button class="btn btn-success my-2 my-sm-0" type="submit">Tìm Kiếm</button>
+    </form>
+  </div>
+  <div class="product_list_header">  
+    <!-- <form action="#" method="post" class="last">
+              <fieldset>
+                  <input type="hidden" name="cmd" value="_cart" />
+                  <input type="hidden" name="display" value="1" />
+                  <input type="submit" name="submit" value="View your cart" class="button" />
+              </fieldset>
+          </form> -->
+         
+        <a href="{{url_for('getCart')}}" class="nav-link btn btn-sm btn-warning mt-2"> Giỏ Hàng ({{ session['Shoppingcart']|length }}) </a>
+         
+  </div>
+  <div class="w3l_header_right">
+    <div class="dropdown mt-2">
+      <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Tài Khoản
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        {% if current_user.is_authenticated %}
+        
+        <a href="#" class="nav-link">{{current_user.name}}</a>        
+        
+        <a href="{{url_for('showcustomerorders')}}" class="nav-link">Đơn hàng của bạn</a>
+        
+        <a href="{{url_for('customer_logout')}}" class="nav-link">Đăng Xuất</a>
+       
+        {% else %}
+        
+        <a href="{{url_for('customer_register')}}" class="nav-link">Đăng Ký</a>     
+        <a href="{{url_for('customerLogin')}}" class="nav-link">Đăng Nhập</a>
+      
+       {% endif %}          
+      </div>
+    </div>
+  </div>
+  <div class="w3l_header_right1">
+    <h2><a href="/">TECHSHOP</a></h2>
+  </div>
+  <div class="clearfix"> </div>
+</div>
+
+<div class="logo_products">
+  <div class="container">
+    <div class="w3ls_logo_products_left">
+      <h1><a href="/"><span>Shiko</span> TechShop</a></h1>
+    </div>
+    <div class="w3ls_logo_products_left1">
+      <ul class="special_items">
+        <li><a href="#">Uy Tín</a><i>/</i></li>
+        <li><a href="#">Chất Lượng</a><i>/</i></li>
+        <li><a href="#">Bảo Hành 2 Năm</a><i>/</i></li>
+        <li><a href="#">Giao Hàng Tận Nơi</a></li>
+      </ul>
+    </div>
+    <div class="w3ls_logo_products_left1">
+      <ul class="phone_email">
+        <li><i class="fa fa-phone" aria-hidden="true"></i>(+84) 798 120 731</li>
+        <li><i class="fa fa-envelope-o" aria-hidden="true"></i><a href="#">shikotechshop@gmail.com</a></li>
+      </ul>
+    </div>
+    <div class="clearfix"> </div>
+  </div>
+</div>
+<!-- //header -->
